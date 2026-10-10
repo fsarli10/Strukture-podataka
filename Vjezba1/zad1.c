@@ -37,6 +37,20 @@ int main() {
 		i++;
 	}
 	fclose(fp);
+
+	int max_bodovi = studenti[0].bodovi;
+	for (int j = 1; j < brojac; j++) {
+		if (studenti[j].bodovi > max_bodovi) {
+			max_bodovi = studenti[j].bodovi;
+		}
+	}
+
+	for (int j = 0; j < brojac; j++) {
+		float relativni_br_bodova = ((float)studenti[j].bodovi / max_bodovi) * 100;
+		printf("Ime: %s | Prezime: %s | Bodovi: %d | Relativni bodovi: %.2f%%\n", 
+			studenti[j].ime, studenti[j].prezime, studenti[j].bodovi, relativni_br_bodova);
+	}
+
 	free(studenti);
 
 	return 0;
