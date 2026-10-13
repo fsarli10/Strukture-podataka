@@ -18,7 +18,7 @@ int main() {
 	char buffer[50] = { 0 };
 	while (!feof(fp))
 	{
-		if(fgets(buffer, sizeof(buffer), fp) != NULL)
+		if(fgets(buffer, sizeof(buffer), fp != NULL)
 		brojac++;
 	}
 	stud* studenti = NULL;
