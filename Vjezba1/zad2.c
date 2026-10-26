@@ -1,101 +1,116 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define FILE_NOT_OPENED -1
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
 
-typedef struct _Person* Position;
 
-typedef struct _Person {
+typedef struct person {
 	char name[50];
 	char lastname[50];
-	int year;
-	Position next;
+	int years;
+	struct person* next;
+}person;
 
-}Person;
-
-int insertBegin(Position p, char* name,char* lastname, int year) {
-	Position newPerson = NULL;
-	newPerson = (Position)malloc(sizeof(Person));
-	if (newPerson == NULL) {
-		free(newPerson);
-		return -1;
+person* addNew(const char* name, const char* lastname, int years) {
+	person* newP = (person*)malloc(sizeof(person));
+	if (newP == NULL) {
+		printf("Greska pri alociranju");
+		exit(1);
 	}
-	newPerson->year = year;
-	strcpy(newPerson->name, name);
-	strcpy(newPerson->lastname, lastname);
-	insertAfter(p, newPerson);
-	return 0;
+
+	strcpy(newP->name, name);
+	strcpy(newP->lastname, lastname);
+	newP->years = years;
+	newP->next = NULL;
+	return newP;
 }
 
-int insertAfter(Position p, Position newP)
-{
-	newP->next = p->next,
-		p->next = newP;
+person* addBegin(person** head, const char* name, const char* lastname, int years) {
+	person* newP = addNew(name, lastname, years);
+	newP->next = *head;
+	*head = newP;
+	return newP;
 }
 
-int insertEnd(Position p,char* name,char* lastname, int year) {
-	Position newPerson = (Position)malloc(sizeof(Person));
-	if (newPerson == NULL) {
-		return -1;
+person* addEnd(person** head, const char* name, const char* lastname, int years) {
+	person* newP = addNew(name, lastname, years);
+	if (*head == NULL) {
+		*head = newP;
+		return newP;
 	}
-	newPerson->year = year;
-	strcpy(newPerson->name, name);
-	strcpy(newPerson->lastname, lastname);
-	newPerson->next = NULL;
-	while (p->next != NULL) {
-		p = p->next;
+	person* temp = *head;
+	while (temp->next != NULL) {
+		temp = temp->next;
+
 	}
-	insertAfter(p, newPerson);
-	
-	return 0;
+	temp->next = newP;
+	return newP;
+}
+
+
+person* findP(person* head, const char* lastname) {
+	person* temp = head;
+	while (temp != NULL) {
+		if (strcmp(temp->lastname, lastname) == 0) {
+			return temp;
+		}temp = temp->next;
+	}
+	return NULL;
+}
+
+void deleteP(person** head, const char* lastname) {
+	person* temp = *head;
+	person* oldP = NULL;
+	while (temp != NULL && strcmp(temp->lastname, lastname) != 0) {
+		oldP = temp;
+		temp = temp->next;
+	}
+	if (temp == NULL) {
+		return;
+	} if (oldP == NULL) {
+		*head = temp->next;
+	}
+	else {
+		oldP->next = temp->next;
+	}
+	free(temp);
+}
+
+
+void freeP(person** head) {
+	person* temp = *head;
+	while (temp != NULL) {
+		person* nextP = temp->next;
+		free(temp);
+		temp = nextP;
+	}
+	*head = NULL;
+}
+
+
+void printP(person* head) {
+	person* temp = head;
+	printf("Sadrzaj tablice:\n");
+	while (temp != NULL) {
+		printf("Ime :%s, Prezime :%s, Godine :%d\n", temp->name, temp->lastname, temp->years);
+		temp = temp->next;
+	}
 }
 
 
 
-int ispis(Position p){
-		Position q = p->next;
-	printf("\n--- POPIS OSOBA ---\n");
-	if (q == NULL) {
-		printf("lista je prazna\n");
-	}
-	while (q != NULL) {
-		printf("ime: %s  prezime: %s  godina: %d\n", q->name, q->lastname, q->year);
-		q = q->next;	
-	}
-	printf("-------------------\n");
-	return 0;
-}
-
-Position findLName(char* lastName, Position p) {
-	Position q = p->next;		// koristit uvik pomocni pokazivac tipa ode q a ne p za kretat se po listi
-	for (q; q != NULL; q = q->next) {
-		if (strcmp(q->lastname, lastName) == 0)
-			return q;
-	}
-}
-
-int deletePerson(char* lastN, Position p) {
-	Position prev = p;                    // prije brisanja mora se stvorit nova veza da se ne izgubi dio baze
-	Position curr = prev->next;
-	curr = findLName(lastN, prev);
-	while (prev->next != curr)
-		prev = prev->next;
-	prev->next = curr->next;
-	free(curr);
-}
 
 int main() {
-	Person Head = { .name = {0},
-				   .lastname = {0},
-				   .year = {0},
-				   .next = NULL };
+	person* head = NULL;
 
-	Position p = &Head;
-	insertBegin(p, "Ana", "Maric", 2006);
-	insertEnd(p, "Roko", "Juric", 2007);
-	
-	ispis(p);
 
-	return 0;
+	addBegin(&head, "Roko", "Travica", 2006);
+	addEnd(&head, "Luka", "Soldic", 2006);
+	addBegin(&head, "Leon", "Nola", 2006);
+	printP(head);
+	deleteP(&head, "Nola");
+
+	printP(head);
+	freeP(&head);
+
 }
