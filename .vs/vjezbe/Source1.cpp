@@ -2,30 +2,27 @@
 #define FILE_NOT_OPENED -1
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct _Person* Position;
 
 typedef struct _Person {
-	char name[50];
-	char lastname[50];
+	char name;
+	char lastname;
 	int year;
 	Position next;
 
 }Person;
 
-int insertBegin(Position p, char* name,char* lastname, int year) {
+int insertBegin(char* name, int  year) {
 	Position newPerson = NULL;
 	newPerson = (Position)malloc(sizeof(Person));
-	if (newPerson == NULL) {
+	if (newPerson = NULL) {
 		free(newPerson);
 		return -1;
 	}
-	newPerson->year = year;
-	strcpy(newPerson->name, name);
-	strcpy(newPerson->lastname, lastname);
-	insertAfter(p, newPerson);
-	return 0;
+	newPerson->god = year;
+	strcpy(newPerson->ime, name);
+	newPerson->next = NULL;
 }
 
 int insertAfter(Position p, Position newP)
@@ -34,37 +31,18 @@ int insertAfter(Position p, Position newP)
 		p->next = newP;
 }
 
-int insertEnd(Position p,char* name,char* lastname, int year) {
-	Position newPerson = (Position)malloc(sizeof(Person));
-	if (newPerson == NULL) {
-		return -1;
-	}
-	newPerson->year = year;
-	strcpy(newPerson->name, name);
-	strcpy(newPerson->lastname, lastname);
-	newPerson->next = NULL;
+int insertEnd(char* name, int year) {
 	while (p->next != NULL) {
 		p = p->next;
 	}
 	insertAfter(p, newPerson);
-	
-	return 0;
 }
 
 
 
-int ispis(Position p){
-		Position q = p->next;
-	printf("\n--- POPIS OSOBA ---\n");
-	if (q == NULL) {
-		printf("lista je prazna\n");
-	}
-	while (q != NULL) {
-		printf("ime: %s  prezime: %s  godina: %d\n", q->name, q->lastname, q->year);
-		q = q->next;	
-	}
-	printf("-------------------\n");
-	return 0;
+int ispis(){
+	for (Position q = p->next; q != NULL; q = q->next)
+		printf(".....");
 }
 
 Position findLName(char* lastName, Position p) {
@@ -75,10 +53,10 @@ Position findLName(char* lastName, Position p) {
 	}
 }
 
-int deletePerson(char* lastN, Position p) {
+int deletePerson(char* lastN, position p) {
 	Position prev = p;                    // prije brisanja mora se stvorit nova veza da se ne izgubi dio baze
 	Position curr = prev->next;
-	curr = findLName(lastN, prev);
+	curr = findLname(lastN, prev);
 	while (prev->next != curr)
 		prev = prev->next;
 	prev->next = curr->next;
@@ -92,10 +70,9 @@ int main() {
 				   .next = NULL };
 
 	Position p = &Head;
-	insertBegin(p, "Ana", "Maric", 2006);
-	insertEnd(p, "Roko", "Juric", 2007);
+	insertAfter(p, newPerson);
 	
-	ispis(p);
+
 
 	return 0;
 }
