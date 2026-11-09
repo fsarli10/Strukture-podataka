@@ -117,7 +117,7 @@ int main() {
 	char line1[1024], line2[1024];
 	poli* p1, * p2;
 
-	FILE* f = fopen("polinomi.txt", "r");
+	FILE* f = fopen("datoteka.txt", "r");
 	if (f == NULL) {
 		printf("Datoteka se ne moze otvoriti.");
 		return 1;
